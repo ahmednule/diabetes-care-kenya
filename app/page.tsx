@@ -3,6 +3,7 @@ import { Activity, ArrowRight, CheckCircle2, HeartPulse, LineChart, ShieldCheck 
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import Image from "next/image"
 
 export default function LandingPage() {
   return (
@@ -23,7 +24,6 @@ export default function LandingPage() {
       </header>
 
       <main className="flex-1">
-        {/* Hero Section */}
         <section className="relative">
           <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
             <div className="flex flex-col items-center text-center lg:flex-row lg:text-left lg:gap-12">
@@ -49,10 +49,12 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="mt-12 lg:mt-0 lg:w-1/2">
-                <img
-                  src="/placeholder.svg?height=400&width=500"
-                  alt="DiabetesCare Kenya Dashboard"
-                  className="rounded-lg shadow-xl"
+                <Image
+                src="./home.jpg"
+                alt="An Image rep the effects of Diabetes"
+                height={400}
+                width={500}
+                className="rounded-lg shadow-xl"
                 />
               </div>
             </div>
