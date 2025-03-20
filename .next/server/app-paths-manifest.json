@@ -1,7 +1,0 @@
-{
-  "/page": "app/page.js",
-  "/login/page": "app/login/page.js",
-  "/profile/page": "app/profile/page.js",
-  "/health-companion/page": "app/health-companion/page.js",
-  "/admin/dashboard/page": "app/admin/dashboard/page.js"
-}

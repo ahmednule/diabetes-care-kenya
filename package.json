@@ -6,6 +6,7 @@
   "description": "Were trying to create a solution for the many kenyans sufering from diabetes",
   "scripts": {
     "dev": "next dev",
+    "vercel-build": "npm install --legacy-peer-deps && npm run build",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
