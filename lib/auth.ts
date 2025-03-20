@@ -1,6 +1,6 @@
 "use server"
 import { jwtVerify, SignJWT } from "jose"
-import { compare, hash } from "bcrypt"
+import { compare, hash } from "bcryptjs"
 import { cookies } from "next/headers"
 import prisma from "./prisma"
 
@@ -39,8 +39,7 @@ export async function login(email: string, password: string): Promise<{ success:
       diabetesType: user.diabetesType,
     })
 
-    // Store token in cookies
-    cookies().set({
+    ;(await cookies()).set({
       name: "auth-token",
       value: token,
       httpOnly: true,
@@ -96,14 +95,14 @@ export async function signup(userData: any): Promise<{ success: boolean; user?: 
       diabetesType: newUser.diabetesType,
     })
 
-    // Store token in cookies
-    cookies().set({
+    ;(await
+      cookies()).set({
       name: "auth-token",
       value: token,
       httpOnly: true,
       path: "/",
       secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24, // 1 day
+      maxAge: 60 * 60 * 24, 
     })
 
     return {
@@ -122,18 +121,14 @@ export async function signup(userData: any): Promise<{ success: boolean; user?: 
   }
 }
 
-/**
- * Log out the current user
- */
-export async function logout (): void {
-  cookies().delete("auth-token")
+
+export async function logout (): Promise<void> {
+  (await cookies()).delete("auth-token")
 }
 
-/**
- * Get the current authenticated user
- */
+
 export async function getCurrentUser(): Promise<User | null> {
-  const token = cookies().get("auth-token")?.value
+  const token = (await cookies()).get("auth-token")?.value
 
   if (!token) {
     return null
@@ -144,30 +139,22 @@ export async function getCurrentUser(): Promise<User | null> {
     return verified.payload as User
   } catch (error) {
     console.error("Error verifying token:", error)
-    cookies().delete("auth-token")
+    ;(await cookies()).delete("auth-token")
     return null
   }
 }
 
-/**
- * Check if the user is authenticated
- */
 export async function isAuthenticated(): Promise<boolean> {
   const user = await getCurrentUser()
   return !!user
 }
 
-/**
- * Check if the user is an admin
- */
+
 export async function isAdmin(): Promise<boolean> {
   const user = await getCurrentUser()
   return user?.role === "ADMIN"
 }
 
-/**
- * Update user profile
- */
 export async function updateProfile(profileData: any): Promise<boolean> {
   try {
     const user = await getCurrentUser()
@@ -175,7 +162,6 @@ export async function updateProfile(profileData: any): Promise<boolean> {
       return false
     }
 
-    // Update user in database
     await prisma.user.update({
       where: { id: user.id },
       data: {
@@ -192,7 +178,6 @@ export async function updateProfile(profileData: any): Promise<boolean> {
       },
     })
 
-    // Update token with new user data
     const updatedUser = await prisma.user.findUnique({
       where: { id: user.id },
     })
@@ -209,14 +194,13 @@ export async function updateProfile(profileData: any): Promise<boolean> {
       diabetesType: updatedUser.diabetesType,
     })
 
-    // Store updated token in cookies
-    cookies().set({
+    ;(await cookies()).set({
       name: "auth-token",
       value: token,
       httpOnly: true,
       path: "/",
       secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24, // 1 day
+      maxAge: 60 * 60 * 24, 
     })
 
     return true
@@ -226,9 +210,6 @@ export async function updateProfile(profileData: any): Promise<boolean> {
   }
 }
 
-/**
- * Create a JWT token
- */
 async function createToken(payload: any): Promise<string> {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
@@ -237,9 +218,6 @@ async function createToken(payload: any): Promise<string> {
     .sign(JWT_SECRET)
 }
 
-/**
- * Verify a JWT token
- */
 async function verifyToken(token: string) {
   return jwtVerify(token, JWT_SECRET)
 }
