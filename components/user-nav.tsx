@@ -13,46 +13,62 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useAuth } from "@/components/auth-provider"
 
 export function UserNav() {
+  const { user, logout, isAdmin } = useAuth()
+
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase()
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="relative h-10 w-10 rounded-full border-2 border-primary/20 hover:border-primary/50 transition-all"
-        >
-          <Avatar className="h-9 w-9">
-            <AvatarImage src="/placeholder.svg?height=36&width=36" alt="User" />
-            <AvatarFallback className="bg-primary/10 text-primary">JK</AvatarFallback>
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src="/placeholder.svg?height=32&width=32" alt={user?.name || "User"} />
+            <AvatarFallback>{user?.name ? getInitials(user.name) : "U"}</AvatarFallback>
           </Avatar>
-          <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-background"></span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">John Kamau</p>
-            <p className="text-xs leading-none text-muted-foreground">john.kamau@example.com</p>
+            <p className="text-sm font-medium leading-none">{user?.name || "Guest"}</p>
+            <p className="text-xs leading-none text-muted-foreground">{user?.email || ""}</p>
+            {isAdmin && <p className="text-xs font-medium text-primary">Administrator</p>}
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer hover:bg-primary/10">
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+          <DropdownMenuItem asChild>
+            <a href={isAdmin ? "/admin/profile" : "/profile"}>
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
+            </a>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer hover:bg-primary/10">
-            <CreditCard className="mr-2 h-4 w-4" />
-            <span>Billing</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer hover:bg-primary/10">
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
+          {!isAdmin && (
+            <DropdownMenuItem asChild>
+              <a href="/billing">
+                <CreditCard className="mr-2 h-4 w-4" />
+                <span>Billing</span>
+              </a>
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem asChild>
+            <a href={isAdmin ? "/admin/settings" : "/settings"}>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
+            </a>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer hover:bg-destructive/10 text-destructive">
+        <DropdownMenuItem onClick={logout}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>

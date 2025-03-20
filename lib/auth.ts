@@ -1,116 +1,140 @@
+"use server"
 import { jwtVerify, SignJWT } from "jose"
+import { compare, hash } from "bcrypt"
+import { cookies } from "next/headers"
+import prisma from "./prisma"
 
-// Secret key for JWT signing and verification
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "your-secret-key-at-least-32-characters-long")
 
-// JWT token expiration (24 hours)
 const EXPIRES_IN = "24h"
 
-// User type definition
 export type User = {
   id: string
   name: string
   email: string
+  role: "USER" | "ADMIN"
   diabetesType?: string
 }
 
-// Mock user database
-const USERS_DB: Record<string, { password: string } & User> = {
-  "user@example.com": {
-    id: "1",
-    name: "John Kamau",
-    email: "user@example.com",
-    password: "password123", // In a real app, this would be hashed
-    diabetesType: "type2",
-  },
+export async function login(email: string, password: string): Promise<{ success: boolean; user?: User }> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+    })
+
+    if (!user) {
+      return { success: false }
+    }
+
+    const passwordMatch = await compare(password, user.password)
+    if (!passwordMatch) {
+      return { success: false }
+    }
+
+    const token = await createToken({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      diabetesType: user.diabetesType,
+    })
+
+    // Store token in cookies
+    cookies().set({
+      name: "auth-token",
+      value: token,
+      httpOnly: true,
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24, // 1 day
+    })
+
+    return {
+      success: true,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        diabetesType: user.diabetesType || undefined,
+      },
+    }
+  } catch (error) {
+    console.error("Login error:", error)
+    return { success: false }
+  }
 }
 
-/**
- * Authenticate a user with email and password
- */
-export async function login(email: string, password: string): Promise<boolean> {
-  // Simulate API call
-  await new Promise((resolve) => setTimeout(resolve, 1000))
 
-  const user = USERS_DB[email]
-  if (!user || user.password !== password) {
-    return false
+export async function signup(userData: any): Promise<{ success: boolean; user?: User }> {
+  try {
+    const existingUser = await prisma.user.findUnique({
+      where: { email: userData.email },
+    })
+
+    if (existingUser) {
+      return { success: false }
+    }
+
+    const hashedPassword = await hash(userData.password, 10)
+
+    const newUser = await prisma.user.create({
+      data: {
+        name: userData.name,
+        email: userData.email,
+        password: hashedPassword,
+        diabetesType: userData.diabetesType,
+        role: userData.email.includes("admin") ? "ADMIN" : "USER", 
+      },
+    })
+
+    const token = await createToken({
+      id: newUser.id,
+      name: newUser.name,
+      email: newUser.email,
+      role: newUser.role,
+      diabetesType: newUser.diabetesType,
+    })
+
+    // Store token in cookies
+    cookies().set({
+      name: "auth-token",
+      value: token,
+      httpOnly: true,
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24, // 1 day
+    })
+
+    return {
+      success: true,
+      user: {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+        diabetesType: newUser.diabetesType || undefined,
+      },
+    }
+  } catch (error) {
+    console.error("Signup error:", error)
+    return { success: false }
   }
-
-  // Create JWT token
-  const token = await createToken({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    diabetesType: user.diabetesType,
-  })
-
-  // Store token in localStorage
-  if (typeof window !== "undefined") {
-    localStorage.setItem("auth-token", token)
-  }
-
-  return true
-}
-
-/**
- * Register a new user
- */
-export async function signup(userData: any): Promise<boolean> {
-  // Simulate API call
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-
-  // Check if user already exists
-  if (USERS_DB[userData.email]) {
-    return false
-  }
-
-  // In a real app, you would hash the password and store in a database
-  const newUser = {
-    id: String(Object.keys(USERS_DB).length + 1),
-    name: userData.name,
-    email: userData.email,
-    password: userData.password, // In a real app, this would be hashed
-    diabetesType: userData.diabetesType,
-  }
-
-  // Add user to mock database
-  USERS_DB[userData.email] = newUser
-
-  // Create JWT token
-  const token = await createToken({
-    id: newUser.id,
-    name: newUser.name,
-    email: newUser.email,
-    diabetesType: newUser.diabetesType,
-  })
-
-  // Store token in localStorage
-  if (typeof window !== "undefined") {
-    localStorage.setItem("auth-token", token)
-  }
-
-  return true
 }
 
 /**
  * Log out the current user
  */
-export function logout(): void {
-  if (typeof window !== "undefined") {
-    localStorage.removeItem("auth-token")
-  }
+export async function logout (): void {
+  cookies().delete("auth-token")
 }
 
 /**
  * Get the current authenticated user
  */
 export async function getCurrentUser(): Promise<User | null> {
-  if (typeof window === "undefined") {
-    return null
-  }
+  const token = cookies().get("auth-token")?.value
 
-  const token = localStorage.getItem("auth-token")
   if (!token) {
     return null
   }
@@ -120,7 +144,7 @@ export async function getCurrentUser(): Promise<User | null> {
     return verified.payload as User
   } catch (error) {
     console.error("Error verifying token:", error)
-    localStorage.removeItem("auth-token")
+    cookies().delete("auth-token")
     return null
   }
 }
@@ -134,44 +158,72 @@ export async function isAuthenticated(): Promise<boolean> {
 }
 
 /**
+ * Check if the user is an admin
+ */
+export async function isAdmin(): Promise<boolean> {
+  const user = await getCurrentUser()
+  return user?.role === "ADMIN"
+}
+
+/**
  * Update user profile
  */
 export async function updateProfile(profileData: any): Promise<boolean> {
-  // Simulate API call
-  await new Promise((resolve) => setTimeout(resolve, 1000))
+  try {
+    const user = await getCurrentUser()
+    if (!user) {
+      return false
+    }
 
-  const user = await getCurrentUser()
-  if (!user) {
+    // Update user in database
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        name: profileData.name,
+        diabetesType: profileData.diabetesType,
+        phone: profileData.phone,
+        address: profileData.address,
+        city: profileData.city,
+        diagnosisDate: profileData.diagnosisDate ? new Date(profileData.diagnosisDate) : undefined,
+        medications: profileData.medications,
+        allergies: profileData.allergies,
+        emergencyContact: profileData.emergencyContact,
+        emergencyPhone: profileData.emergencyPhone,
+      },
+    })
+
+    // Update token with new user data
+    const updatedUser = await prisma.user.findUnique({
+      where: { id: user.id },
+    })
+
+    if (!updatedUser) {
+      return false
+    }
+
+    const token = await createToken({
+      id: updatedUser.id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role,
+      diabetesType: updatedUser.diabetesType,
+    })
+
+    // Store updated token in cookies
+    cookies().set({
+      name: "auth-token",
+      value: token,
+      httpOnly: true,
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24, // 1 day
+    })
+
+    return true
+  } catch (error) {
+    console.error("Update profile error:", error)
     return false
   }
-
-  // In a real app, you would update the user in the database
-  const existingUser = USERS_DB[user.email]
-  if (!existingUser) {
-    return false
-  }
-
-  // Update user data
-  USERS_DB[user.email] = {
-    ...existingUser,
-    name: profileData.name,
-    diabetesType: profileData.diabetesType,
-  }
-
-  // Update token with new user data
-  const token = await createToken({
-    id: user.id,
-    name: profileData.name,
-    email: user.email,
-    diabetesType: profileData.diabetesType,
-  })
-
-  // Store updated token in localStorage
-  if (typeof window !== "undefined") {
-    localStorage.setItem("auth-token", token)
-  }
-
-  return true
 }
 
 /**

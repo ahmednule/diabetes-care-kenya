@@ -11,6 +11,7 @@ type AuthContextType = {
   user: User | null
   loading: boolean
   authenticated: boolean
+  isAdmin: boolean
   logout: () => void
 }
 
@@ -18,6 +19,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   authenticated: false,
+  isAdmin: false,
   logout: () => {},
 })
 
@@ -25,6 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [authenticated, setAuthenticated] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -36,6 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (auth) {
           const currentUser = await getCurrentUser()
           setUser(currentUser)
+          setIsAdmin(currentUser?.role === "ADMIN")
         }
       } catch (error) {
         console.error("Auth check error:", error)
@@ -51,6 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     logout()
     setUser(null)
     setAuthenticated(false)
+    setIsAdmin(false)
     router.push("/login")
   }
 
@@ -60,6 +65,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         loading,
         authenticated,
+        isAdmin,
         logout: handleLogout,
       }}
     >

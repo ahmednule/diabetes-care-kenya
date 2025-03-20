@@ -48,13 +48,19 @@ export default function SignupPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
     try {
-      const success = await signup(values)
+      const { success, user } = await signup(values)
       if (success) {
         toast({
           title: "Account created",
           description: "Welcome to DiabetesCare Kenya",
         })
-        router.push("/dashboard")
+
+        // Redirect based on user role
+        if (user?.role === "ADMIN") {
+          router.push("/admin/dashboard")
+        } else {
+          router.push("/dashboard")
+        }
       } else {
         toast({
           variant: "destructive",

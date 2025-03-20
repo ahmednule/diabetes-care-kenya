@@ -49,7 +49,7 @@ export function RecentReadings() {
   return (
     <div className="space-y-4">
       {readings.map((reading) => (
-        <Card key={reading.id} className="overflow-hidden border-none shadow-md hover:shadow-lg transition-all">
+        <Card key={reading.id} className="overflow-hidden">
           <CardContent className="p-0">
             <div className="flex items-center">
               <div className={`flex h-full w-2 ${getStatusColor(reading.status)}`}></div>
@@ -59,7 +59,7 @@ export function RecentReadings() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
-                    <p className="font-medium text-lg">
+                    <p className="font-medium">
                       {reading.value} {reading.unit}
                     </p>
                     <span className="text-xs text-muted-foreground">{reading.time}</span>

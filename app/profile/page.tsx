@@ -222,11 +222,9 @@ export default function ProfilePage() {
             </TabsList>
 
             <TabsContent value="profile" className="space-y-6">
-              <Card className="border-none shadow-xl animate-fadeIn">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
-                    Personal Information
-                  </CardTitle>
+                  <CardTitle>Personal Information</CardTitle>
                   <CardDescription>Update your personal information and health details</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -240,7 +238,7 @@ export default function ProfilePage() {
                             <FormItem>
                               <FormLabel>Full Name</FormLabel>
                               <FormControl>
-                                <Input {...field} className="bg-background/50 focus:bg-background transition-all" />
+                                <Input {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -253,7 +251,7 @@ export default function ProfilePage() {
                             <FormItem>
                               <FormLabel>Email</FormLabel>
                               <FormControl>
-                                <Input {...field} className="bg-background/50 focus:bg-background transition-all" />
+                                <Input {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -266,7 +264,7 @@ export default function ProfilePage() {
                             <FormItem>
                               <FormLabel>Phone Number</FormLabel>
                               <FormControl>
-                                <Input {...field} className="bg-background/50 focus:bg-background transition-all" />
+                                <Input {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -279,7 +277,7 @@ export default function ProfilePage() {
                             <FormItem>
                               <FormLabel>Address</FormLabel>
                               <FormControl>
-                                <Input {...field} className="bg-background/50 focus:bg-background transition-all" />
+                                <Input {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -292,7 +290,7 @@ export default function ProfilePage() {
                             <FormItem>
                               <FormLabel>City</FormLabel>
                               <FormControl>
-                                <Input {...field} className="bg-background/50 focus:bg-background transition-all" />
+                                <Input {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -301,9 +299,7 @@ export default function ProfilePage() {
                       </div>
 
                       <Separator />
-                      <h3 className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
-                        Health Information
-                      </h3>
+                      <h3 className="text-lg font-medium">Health Information</h3>
 
                       <div className="grid gap-4 md:grid-cols-2">
                         <FormField
@@ -314,7 +310,7 @@ export default function ProfilePage() {
                               <FormLabel>Diabetes Type</FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
-                                  <SelectTrigger className="bg-background/50 focus:bg-background transition-all">
+                                  <SelectTrigger>
                                     <SelectValue placeholder="Select diabetes type" />
                                   </SelectTrigger>
                                 </FormControl>
@@ -337,11 +333,7 @@ export default function ProfilePage() {
                             <FormItem>
                               <FormLabel>Diagnosis Date</FormLabel>
                               <FormControl>
-                                <Input
-                                  type="date"
-                                  {...field}
-                                  className="bg-background/50 focus:bg-background transition-all"
-                                />
+                                <Input type="date" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -356,7 +348,7 @@ export default function ProfilePage() {
                               <FormControl>
                                 <Textarea
                                   placeholder="List your current medications and dosages"
-                                  className="min-h-[80px] bg-background/50 focus:bg-background transition-all"
+                                  className="min-h-[80px]"
                                   {...field}
                                 />
                               </FormControl>
@@ -374,7 +366,7 @@ export default function ProfilePage() {
                               <FormControl>
                                 <Textarea
                                   placeholder="List any allergies you have"
-                                  className="min-h-[80px] bg-background/50 focus:bg-background transition-all"
+                                  className="min-h-[80px]"
                                   {...field}
                                 />
                               </FormControl>
@@ -385,9 +377,7 @@ export default function ProfilePage() {
                       </div>
 
                       <Separator />
-                      <h3 className="text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
-                        Emergency Contact
-                      </h3>
+                      <h3 className="text-lg font-medium">Emergency Contact</h3>
 
                       <div className="grid gap-4 md:grid-cols-2">
                         <FormField
@@ -397,7 +387,7 @@ export default function ProfilePage() {
                             <FormItem>
                               <FormLabel>Emergency Contact Name</FormLabel>
                               <FormControl>
-                                <Input {...field} className="bg-background/50 focus:bg-background transition-all" />
+                                <Input {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -410,7 +400,7 @@ export default function ProfilePage() {
                             <FormItem>
                               <FormLabel>Emergency Contact Phone</FormLabel>
                               <FormControl>
-                                <Input {...field} className="bg-background/50 focus:bg-background transition-all" />
+                                <Input {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -418,11 +408,7 @@ export default function ProfilePage() {
                         />
                       </div>
 
-                      <Button
-                        type="submit"
-                        className="w-full shadow-md hover:shadow-lg transition-all"
-                        disabled={isLoading}
-                      >
+                      <Button type="submit" className="w-full" disabled={isLoading}>
                         {isLoading ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -1,0 +1,10 @@
+{
+  "/api/admin/stats/route": "app/api/admin/stats/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/page": "app/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/login/page": "app/login/page.js",
+  "/profile/page": "app/profile/page.js",
+  "/health-companion/page": "app/health-companion/page.js",
+  "/admin/dashboard/page": "app/admin/dashboard/page.js"
+}

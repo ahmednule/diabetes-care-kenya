@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  password      String
+  role          Role      @default(USER)
+  diabetesType  String?
+  phone         String?
+  address       String?
+  city          String?
+  diagnosisDate DateTime?
+  medications   String?
+  allergies     String?
+  emergencyContact String?
+  emergencyPhone   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  readings      GlucoseReading[]
+  appointments  Appointment[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model GlucoseReading {
+  id        String   @id @default(cuid())
+  value     Float
+  unit      String
+  timestamp DateTime @default(now())
+  label     String?
+  status    String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Appointment {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  date        DateTime
+  location    String?
+  doctorName  String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
