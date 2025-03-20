@@ -8,6 +8,7 @@ import { Activity, BarChart3, Calendar, PieChart, Settings, Users } from "lucide
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+// import { UserNav } from "@/components/user-nav"
 import { UserNav } from "@/components/user-nav"
 import { isAdmin } from "@/lib/auth"
 
@@ -21,7 +22,6 @@ export default function AdminDashboardPage() {
   })
 
   useEffect(() => {
-    // Check if user is admin
     const checkAdmin = async () => {
       const admin = await isAdmin()
       if (!admin) {
