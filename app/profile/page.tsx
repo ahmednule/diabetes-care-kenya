@@ -182,7 +182,7 @@ export default function ProfilePage() {
               <Link href="/dashboard">Dashboard</Link>
             </Button>
             <Button variant="ghost" className="justify-start gap-2" asChild>
-              <Link href="/readings">Readings</Link>
+              <Link href="/readings/new">Readings</Link>
             </Button>
             <Button variant="ghost" className="justify-start gap-2" asChild>
               <Link href="/appointments">Appointments</Link>

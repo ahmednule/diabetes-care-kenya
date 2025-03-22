@@ -100,7 +100,7 @@ export default function NewReadingPage() {
               </Link>
             </Button>
             <Button variant="ghost" className="justify-start gap-2 bg-muted" asChild>
-              <Link href="/readings">
+              <Link href="/readings/new">
                 <Activity className="h-4 w-4" />
                 Readings
               </Link>
