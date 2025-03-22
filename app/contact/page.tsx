@@ -1,5 +1,10 @@
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+
 export default function ContactPage() {
     return (
+      <>
+      <Header/>
       <div className="max-w-5xl mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold text-center text-green-700 mb-8">Contact Us</h1>
         
@@ -171,5 +176,7 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
+      <Footer/>
+      </>
     );
   }
