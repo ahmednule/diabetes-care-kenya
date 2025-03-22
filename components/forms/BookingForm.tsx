@@ -27,11 +27,17 @@ export default function BookingForm({
   const [doctor, setDoctor] = useState("")
   const [reason, setReason] = useState("")
 
+  // Define available time slots (every 30 minutes from 9:00 AM to 5:00 PM)
+  const timeSlots = [
+    "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00",
+    "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
+  ]
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!date || !time || !doctor) return
     const appointment: Appointment = {
-      date: new Date(date), 
+      date: new Date(date),
       time,
       doctor,
       reason,
@@ -54,6 +60,7 @@ export default function BookingForm({
           id="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
+          min={new Date().toISOString().split("T")[0]} // Restrict to today or future dates
           required
         />
       </div>
@@ -62,13 +69,18 @@ export default function BookingForm({
         <label htmlFor="time" className="block text-sm font-medium">
           Time
         </label>
-        <Input
-          type="time"
-          id="time"
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
-          required
-        />
+        <Select value={time} onValueChange={setTime}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select a time" />
+          </SelectTrigger>
+          <SelectContent>
+            {timeSlots.map((slot) => (
+              <SelectItem key={slot} value={slot}>
+                {slot}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div>

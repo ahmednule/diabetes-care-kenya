@@ -1,8 +1,9 @@
 "use client"
 
 import React, { useState } from "react"
-import { DayPicker } from "react-day-picker"
-import "react-day-picker/dist/style.css"
+import { Calendar, momentLocalizer } from "react-big-calendar"
+import moment from "moment"
+import "react-big-calendar/lib/css/react-big-calendar.css"
 import { Button } from "@/components/ui/button"
 import DashboardLayout from "@/components/DashboardLayout"
 import BookingForm from "@/components/forms/BookingForm"
@@ -14,11 +15,23 @@ type Appointment = {
   reason: string
 }
 
+const localizer = momentLocalizer(moment)
+
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([])
   const [isBookingFormOpen, setIsBookingFormOpen] = useState(false)
 
-  const bookedDates = appointments.map((appt) => appt.date)
+  const events = appointments.map((appt) => {
+    const start = new Date(appt.date)
+    const [hours, minutes] = appt.time.split(":").map(Number)
+    start.setHours(hours, minutes)
+    const end = new Date(start.getTime() + 60 * 60 * 1000)
+    return {
+      start,
+      end,
+      title: `Appointment with ${appt.doctor} - ${appt.reason || "No reason provided"}`,
+    }
+  })
 
   const handleBookAppointment = (newAppointment: Appointment) => {
     setAppointments((prev) => [...prev, newAppointment])
@@ -45,9 +58,12 @@ export default function AppointmentsPage() {
         )}
 
         <div className="mt-4">
-          <DayPicker
-            mode="multiple"
-            selected={bookedDates}
+          <Calendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            style={{ height: 500 }}
             className="border rounded-md p-2"
           />
         </div>

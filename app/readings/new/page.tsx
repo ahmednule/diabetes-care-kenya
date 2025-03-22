@@ -37,7 +37,7 @@ export default function NewReadingPage() {
       value: "",
       unit: "mmol/L",
       label: "Before Breakfast",
-      timestamp: new Date().toISOString().slice(0, 16), // Format: YYYY-MM-DDTHH:MM
+      timestamp: new Date().toISOString().slice(0, 16), 
     },
   })
 
