@@ -12,7 +12,6 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "DiabetesCare Kenya",
   description: "Personalized diabetes care for Kenyans",
-    generator: 'v0.dev'
 }
 
 export default function RootLayout({

@@ -221,4 +221,3 @@ async function createToken(payload: any): Promise<string> {
 async function verifyToken(token: string) {
   return jwtVerify(token, JWT_SECRET)
 }
-

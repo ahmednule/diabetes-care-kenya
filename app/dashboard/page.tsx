@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Activity, BarChart3, Calendar, MessageSquare, PieChart, User } from "lucide-react"
@@ -10,22 +10,62 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Overview } from "@/components/overview"
 import { RecentReadings } from "@/components/recent-readings"
 import { UserNav } from "@/components/user-nav"
-import { isAuthenticated } from "@/lib/auth"
+import { useAuth } from "@/components/auth-provider"
+
+type DashboardStats = {
+  averageGlucose: number
+  hba1c: number
+  readingsThisWeek: number
+  riskScore: string
+}
 
 export default function DashboardPage() {
   const router = useRouter()
+  const { user, authenticated, loading, isAdmin } = useAuth()
+  const [stats, setStats] = useState<DashboardStats>({
+    averageGlucose: 0,
+    hba1c: 0,
+    readingsThisWeek: 0,
+    riskScore: "Unknown",
+  })
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     // Check if user is authenticated
-    const checkAuth = async () => {
-      const authenticated = await isAuthenticated()
+    if (!loading) {
       if (!authenticated) {
         router.push("/login")
+      } else if (isAdmin) {
+        router.push("/admin/dashboard")
+      } else {
+        fetchDashboardData()
       }
     }
+  }, [loading, authenticated, isAdmin, router])
 
-    checkAuth()
-  }, [router])
+  const fetchDashboardData = async () => {
+    try {
+      setIsLoading(true)
+      const response = await fetch("/api/dashboard/stats")
+      const data = await response.json()
+      setStats(data)
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  if (loading || isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold">Loading...</h2>
+          <p className="text-muted-foreground">Please wait while we load your dashboard</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -77,7 +117,9 @@ export default function DashboardPage() {
           <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-semibold">Dashboard</h1>
-              <Button>Log New Reading</Button>
+              <Button asChild>
+                <Link href="/readings/new">Log New Reading</Link>
+              </Button>
             </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               <Card>
@@ -85,7 +127,7 @@ export default function DashboardPage() {
                   <CardTitle className="text-sm font-medium">Average Glucose</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">6.2 mmol/L</div>
+                  <div className="text-2xl font-bold">{stats.averageGlucose} mmol/L</div>
                   <p className="text-xs text-muted-foreground">
                     <span className="text-green-500">↓ 0.3</span> from last week
                   </p>
@@ -96,7 +138,7 @@ export default function DashboardPage() {
                   <CardTitle className="text-sm font-medium">HbA1c Estimate</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">6.8%</div>
+                  <div className="text-2xl font-bold">{stats.hba1c}%</div>
                   <p className="text-xs text-muted-foreground">
                     <span className="text-green-500">↓ 0.2%</span> from last check
                   </p>
@@ -107,7 +149,7 @@ export default function DashboardPage() {
                   <CardTitle className="text-sm font-medium">Readings This Week</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">18</div>
+                  <div className="text-2xl font-bold">{stats.readingsThisWeek}</div>
                   <p className="text-xs text-muted-foreground">
                     <span className="text-red-500">↓ 4</span> from target
                   </p>
@@ -118,7 +160,7 @@ export default function DashboardPage() {
                   <CardTitle className="text-sm font-medium">Risk Score</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">Low</div>
+                  <div className="text-2xl font-bold">{stats.riskScore}</div>
                   <p className="text-xs text-muted-foreground">Based on recent data</p>
                 </CardContent>
               </Card>

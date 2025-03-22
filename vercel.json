@@ -1,4 +1,0 @@
-{
-  "buildCommand": "npm install --legacy-peer-deps tailwindcss postcss autoprefixer && npm run build",
-  "installCommand": "npm install --legacy-peer-deps"
-}
