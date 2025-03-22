@@ -65,7 +65,7 @@ export default function HealthCompanionPage() {
         <aside className="hidden w-64 border-r bg-muted/40 lg:block">
           <nav className="grid gap-2 p-4 text-sm">
             <Button variant="ghost" className="justify-start gap-2" asChild>
-              <Link href="/">Dashboard</Link>
+              <Link href="/dashboard">Dashboard</Link>
             </Button>
             <Button variant="ghost" className="justify-start gap-2" asChild>
               <Link href="/readings">Readings</Link>

@@ -13,7 +13,7 @@ export default function Sidebar() {
     <aside className="hidden w-64 border-r bg-muted/40 lg:block">
       <nav className="grid gap-2 p-4 text-sm">
         <Button variant="ghost" className={`justify-start gap-2 ${isActive("/") ? "bg-muted" : ""}`} asChild>
-          <Link href="/">Dashboard</Link>
+          <Link href="/dashboard">Dashboard</Link>
         </Button>
         <Button variant="ghost" className={`justify-start gap-2 ${isActive("/readings") ? "bg-muted" : ""}`} asChild>
           <Link href="/readings">Readings</Link>
