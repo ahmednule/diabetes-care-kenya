@@ -124,7 +124,7 @@ export default function ContactPage() {
                 <label htmlFor="message" className="block text-sm font-medium mb-1">Message</label>
                 <textarea 
                   id="message" 
-                  rows="5"
+                  rows={5}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500" 
                   placeholder="How can we help you?"
                 ></textarea>
