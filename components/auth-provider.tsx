@@ -56,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null)
     setAuthenticated(false)
     setIsAdmin(false)
-    router.push("/login")
+    router.push("/")
   }
 
   return (
