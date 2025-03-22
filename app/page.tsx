@@ -4,24 +4,13 @@ import Image from "next/image"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
-        <Link href="/" className="flex items-center gap-2 font-semibold">
-          <Activity className="h-6 w-6 text-primary" />
-          <span>DiabetesCare Kenya</span>
-        </Link>
-        <div className="ml-auto flex items-center gap-4">
-          <Link href="/login">
-            <Button variant="ghost">Log in</Button>
-          </Link>
-          <Link href="/signup">
-            <Button>Sign up</Button>
-          </Link>
-        </div>
-      </header>
+      <Header/>
 
       <main className="flex-1">
         {/* Hero Section */}
@@ -269,32 +258,7 @@ export default function LandingPage() {
           </div>
         </section>
       </main>
-
-      <footer className="border-t bg-muted/30 py-12">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-            <div className="flex items-center gap-2">
-              <Activity className="h-6 w-6 text-primary" />
-              <span className="font-semibold">DiabetesCare Kenya</span>
-            </div>
-            <div className="flex gap-8">
-              <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground">
-                About
-              </Link>
-              <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground">
-                Privacy
-              </Link>
-              <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground">
-                Terms
-              </Link>
-              <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground">
-                Contact
-              </Link>
-            </div>
-            <p className="text-sm text-muted-foreground">© 2025 DiabetesCare Kenya. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+    <Footer/>
     </div>
   )
 }
