@@ -31,7 +31,6 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Check if user is authenticated
     if (!loading) {
       if (!authenticated) {
         router.push("/login")
@@ -88,7 +87,7 @@ export default function DashboardPage() {
               </Link>
             </Button>
             <Button variant="ghost" className="justify-start gap-2" asChild>
-              <Link href="/readings">
+              <Link href="/readings/">
                 <Activity className="h-4 w-4" />
                 Readings
               </Link>
