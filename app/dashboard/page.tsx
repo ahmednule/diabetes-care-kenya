@@ -198,7 +198,7 @@ export default function DashboardPage() {
                       </div>
                       <div className="flex-1 space-y-1">
                         <p className="text-sm font-medium">Dr. Wanjiku - Diabetes Check</p>
-                        <p className="text-xs text-muted-foreground">May 24, 2024 at 10:00 AM</p>
+                        <p className="text-xs text-muted-foreground">May 24, 2025 at 10:00 AM</p>
                       </div>
                       <Button variant="outline" size="sm">
                         Reschedule
@@ -210,7 +210,7 @@ export default function DashboardPage() {
                       </div>
                       <div className="flex-1 space-y-1">
                         <p className="text-sm font-medium">Lab Work - HbA1c Test</p>
-                        <p className="text-xs text-muted-foreground">June 2, 2024 at 8:30 AM</p>
+                        <p className="text-xs text-muted-foreground">June 2, 2025 at 8:30 AM</p>
                       </div>
                       <Button variant="outline" size="sm">
                         Reschedule
