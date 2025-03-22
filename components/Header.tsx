@@ -11,12 +11,6 @@ export default function Header(){
           <span>DiabetesCare Kenya</span>
         </Link>
         <div className="ml-auto flex items-center gap-4">
-        <Link href="/about">
-            <Button variant="ghost">About</Button>
-          </Link>
-        <Link href="/contact">
-            <Button variant="ghost">contact</Button>
-          </Link>
           <Link href="/login">
             <Button variant="ghost">Log in</Button>
           </Link>
