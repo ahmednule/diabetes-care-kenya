@@ -17,8 +17,8 @@ import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { UserNav } from "@/components/user-nav"
 import { updateProfile } from "@/lib/auth"
+import DashboardLayout from "@/components/DashboardLayout"
 
 const profileFormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
@@ -146,7 +146,6 @@ export default function ProfilePage() {
   async function onNotificationSubmit(values: z.infer<typeof notificationFormSchema>) {
     setIsLoading(true)
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
       toast({
@@ -164,37 +163,10 @@ export default function ProfilePage() {
     }
   }
 
+  
   return (
+    <DashboardLayout>
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
-        <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
-          <Activity className="h-6 w-6 text-primary" />
-          <span>DiabetesCare Kenya</span>
-        </Link>
-        <div className="ml-auto flex items-center gap-4">
-          <UserNav />
-        </div>
-      </header>
-      <div className="flex flex-1">
-        <aside className="hidden w-64 border-r bg-muted/40 lg:block">
-          <nav className="grid gap-2 p-4 text-sm">
-            <Button variant="ghost" className="justify-start gap-2" asChild>
-              <Link href="/dashboard">Dashboard</Link>
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2" asChild>
-              <Link href="/readings/new">Readings</Link>
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2" asChild>
-              <Link href="/appointments">Appointments</Link>
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2 bg-muted" asChild>
-              <Link href="/profile">Profile</Link>
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2" asChild>
-              <Link href="/health-companion">Health Companion</Link>
-            </Button>
-          </nav>
-        </aside>
         <main className="flex-1 p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
@@ -586,7 +558,7 @@ export default function ProfilePage() {
           </Tabs>
         </main>
       </div>
-    </div>
+      </DashboardLayout>
   )
 }
 

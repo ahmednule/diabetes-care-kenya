@@ -9,8 +9,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Overview } from "@/components/overview"
 import { RecentReadings } from "@/components/recent-readings"
-import { UserNav } from "@/components/user-nav"
+// import { UserNav } from "@/components/user-nav"
 import { useAuth } from "@/components/auth-provider"
+import DashboardLayout from "@/components/DashboardLayout"
 
 type DashboardStats = {
   averageGlucose: number
@@ -67,51 +68,9 @@ export default function DashboardPage() {
   }
 
   return (
+    <DashboardLayout>
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
-        <Link href="/" className="flex items-center gap-2 font-semibold">
-          <Activity className="h-6 w-6 text-primary" />
-          <span>DiabetesCare Kenya</span>
-        </Link>
-        <div className="ml-auto flex items-center gap-4">
-          <UserNav />
-        </div>
-      </header>
       <div className="flex flex-1">
-        <aside className="hidden w-64 border-r bg-muted/40 lg:block">
-          <nav className="grid gap-2 p-4 text-sm">
-            <Button variant="ghost" className="justify-start gap-2 bg-muted" asChild>
-              <Link href="/dashboard">
-                <BarChart3 className="h-4 w-4" />
-                Dashboard
-              </Link>
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2" asChild>
-              <Link href="/readings/new">
-                <Activity className="h-4 w-4" />
-                Readings
-              </Link>
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2" asChild>
-              <Link href="/appointments">
-                <Calendar className="h-4 w-4" />
-                Appointments
-              </Link>
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2" asChild>
-              <Link href="/profile">
-                <User className="h-4 w-4" />
-                Profile
-              </Link>
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2" asChild>
-              <Link href="/health-companion">
-                <MessageSquare className="h-4 w-4" />
-                Health Companion
-              </Link>
-            </Button>
-          </nav>
-        </aside>
         <main className="flex-1 p-6">
           <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
@@ -248,6 +207,7 @@ export default function DashboardPage() {
         </main>
       </div>
     </div>
+    </DashboardLayout>
   )
 }
 

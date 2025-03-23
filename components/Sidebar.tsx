@@ -4,6 +4,8 @@ import React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { Activity, BarChart3, Calendar, MessageSquare,User } from "lucide-react"
+
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -11,23 +13,38 @@ export default function Sidebar() {
 
   return (
     <aside className="hidden w-64 border-r bg-muted/40 lg:block">
-      <nav className="grid gap-2 p-4 text-sm">
-        <Button variant="ghost" className={`justify-start gap-2 ${isActive("/") ? "bg-muted" : ""}`} asChild>
-          <Link href="/dashboard">Dashboard</Link>
-        </Button>
-        <Button variant="ghost" className={`justify-start gap-2 ${isActive("/readings") ? "bg-muted" : ""}`} asChild>
-          <Link href="/readings">Readings</Link>
-        </Button>
-        <Button variant="ghost" className={`justify-start gap-2 ${isActive("/appointments") ? "bg-muted" : ""}`} asChild>
-          <Link href="/appointments">Appointments</Link>
-        </Button>
-        <Button variant="ghost" className={`justify-start gap-2 ${isActive("/profile") ? "bg-muted" : ""}`} asChild>
-          <Link href="/profile">Profile</Link>
-        </Button>
-        <Button variant="ghost" className={`justify-start gap-2 ${isActive("/health-companion") ? "bg-muted" : ""}`} asChild>
-          <Link href="/health-companion">Health Companion</Link>
-        </Button>
-      </nav>
-    </aside>
+    <nav className="grid gap-2 p-4 text-sm">
+      <Button variant="ghost" className="justify-start gap-2 bg-muted" asChild>
+        <Link href="/dashboard">
+          <BarChart3 className="h-4 w-4" />
+          Dashboard
+        </Link>
+      </Button>
+      <Button variant="ghost" className="justify-start gap-2" asChild>
+        <Link href="/readings">
+          <Activity className="h-4 w-4" />
+          Readings
+        </Link>
+      </Button>
+      <Button variant="ghost" className="justify-start gap-2" asChild>
+        <Link href="/appointments">
+          <Calendar className="h-4 w-4" />
+          Appointments
+        </Link>
+      </Button>
+      <Button variant="ghost" className="justify-start gap-2" asChild>
+        <Link href="/profile">
+          <User className="h-4 w-4" />
+          Profile
+        </Link>
+      </Button>
+      <Button variant="ghost" className="justify-start gap-2" asChild>
+        <Link href="/health-companion">
+          <MessageSquare className="h-4 w-4" />
+          Health Companion
+        </Link>
+      </Button>
+    </nav>
+  </aside>
   )
 }
