@@ -9,8 +9,7 @@ import { Activity, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { UserNav } from "@/components/user-nav"
-
+import DashboardLayout from "@/components/DashboardLayout"
 type Message = {
   role: "user" | "assistant"
   content: string
@@ -28,12 +27,10 @@ export default function HealthCompanionPage() {
   const handleSend = () => {
     if (!input.trim()) return
 
-    // Add user message
     const userMessage: Message = { role: "user", content: input }
     setMessages((prev) => [...prev, userMessage])
     setInput("")
 
-    // Simulate AI response (in a real app, this would call Azure OpenAI)
     setTimeout(() => {
       const aiResponse: Message = {
         role: "assistant",
@@ -51,36 +48,8 @@ export default function HealthCompanionPage() {
   }
 
   return (
+    <DashboardLayout>
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
-        <Link href="/" className="flex items-center gap-2 font-semibold">
-          <Activity className="h-6 w-6 text-primary" />
-          <span>DiabetesCare Kenya</span>
-        </Link>
-        <div className="ml-auto flex items-center gap-4">
-          <UserNav />
-        </div>
-      </header>
-      <div className="flex flex-1">
-        <aside className="hidden w-64 border-r bg-muted/40 lg:block">
-          <nav className="grid gap-2 p-4 text-sm">
-            <Button variant="ghost" className="justify-start gap-2" asChild>
-              <Link href="/dashboard">Dashboard</Link>
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2" asChild>
-              <Link href="/readings">Readings</Link>
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2" asChild>
-              <Link href="/appointments">Appointments</Link>
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2" asChild>
-              <Link href="/profile">Profile</Link>
-            </Button>
-            <Button variant="ghost" className="justify-start gap-2 bg-muted" asChild>
-              <Link href="/health-companion">Health Companion</Link>
-            </Button>
-          </nav>
-        </aside>
         <main className="flex flex-1 flex-col">
           <div className="flex flex-1 flex-col p-6">
             <div className="mb-4">
@@ -125,11 +94,10 @@ export default function HealthCompanionPage() {
           </div>
         </main>
       </div>
-    </div>
+      </DashboardLayout>
   )
 }
 
-// Simulate AI responses - in a real app, this would call Azure OpenAI
 function getAIResponse(input: string): string {
   const inputLower = input.toLowerCase()
 
