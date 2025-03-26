@@ -1,1 +1,1 @@
-# Diabetes Care Kenya
+Diabetes-care-Kenya - Kenya is an innovative solution designed to enhance diabetes management through real-time monitoring, personalized insights, and predictive analysis. By leveraging artificial intelligence, this tool helps individuals track their health, receive actionable recommendations, and prevent complications before they arise.
