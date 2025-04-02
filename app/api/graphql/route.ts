@@ -2,8 +2,8 @@ import { generateText } from "ai"
 import { openai } from "@ai-sdk/openai"
 import { createYoga } from "graphql-yoga"
 import { makeExecutableSchema } from "@graphql-tools/schema"
+import prisma from "@/lib/prisma"
 
-// Define GraphQL schema
 const typeDefs = `
   type GlucoseReading {
     id: ID!
@@ -39,7 +39,6 @@ const typeDefs = `
   }
 `
 
-// Sample data - in a real app, this would come from Microsoft Fabric
 const readings = [
   {
     id: "1",
@@ -178,20 +177,17 @@ function getReadingStatus(value: number, unit: string): string {
     return "very-high"
   }
 
-  // For mg/dL
   if (value < 70) return "low"
   if (value <= 126) return "normal"
   if (value <= 180) return "high"
   return "very-high"
 }
 
-// Create executable schema
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
 })
 
-// Create and export the GraphQL handler
 const { handleRequest } = createYoga({
   schema,
   graphqlEndpoint: "/api/graphql",
