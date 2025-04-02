@@ -29,11 +29,12 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/components/auth-provider"
 import { Badge } from "@/components/ui/badge"
+import { GlucoseReading, ReadingsResponse } from "../types/glucose"
 
 export default function ReadingsPage() {
   const router = useRouter()
   const { user, authenticated, loading } = useAuth()
-  const [readings, setReadings] = useState([])
+  const [readings, setReadings] = useState<GlucoseReading[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -48,7 +49,7 @@ export default function ReadingsPage() {
     if (!loading && authenticated) {
       fetchReadings()
     }
-  }, [loading, authenticated])
+  }, [loading, authenticated, currentPage])
 
   const fetchReadings = async () => {
     if (isLoading) return;
@@ -56,7 +57,7 @@ export default function ReadingsPage() {
     try {
       setIsLoading(true)
       const response = await fetch(`/api/readings?page=${currentPage}&limit=10`)
-      const data = await response.json()
+      const data = await response.json() as ReadingsResponse
       
       if (data && Array.isArray(data.readings)) {
         setReadings(data.readings)
@@ -69,15 +70,13 @@ export default function ReadingsPage() {
     }
   }
 
-  // Pagination handling
-  const paginate = (pageNumber) => {
+  const paginate = (pageNumber: number) => {
     if (pageNumber > 0 && pageNumber <= totalPages) {
       setCurrentPage(pageNumber)
     }
   }
 
-  // Format date for display
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     return date.toLocaleDateString("en-US", {
       year: "numeric",
@@ -88,8 +87,12 @@ export default function ReadingsPage() {
     })
   }
 
-  // Status display helper
-  const getStatusDisplay = (status) => {
+  interface StatusDisplay {
+    label: string;
+    color: string;
+  }
+
+  const getStatusDisplay = (status: GlucoseReading['status']): StatusDisplay => {
     switch (status) {
       case "very-low":
         return { label: "Very Low", color: "bg-red-100 text-red-800" }
@@ -106,9 +109,7 @@ export default function ReadingsPage() {
     }
   }
 
-  // Simple export function
   const exportReadings = () => {
-    // CSV export logic here
     console.log("Export functionality would go here")
   }
 
