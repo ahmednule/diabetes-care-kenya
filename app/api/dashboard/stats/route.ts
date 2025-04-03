@@ -4,13 +4,11 @@ import prisma from "@/lib/prisma"
 
 export async function GET() {
   try {
-    // Get current user
     const user = await getCurrentUser()
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    // Get user's readings
     const readings = await prisma.glucoseReading.findMany({
       where: {
         userId: user.id,
@@ -20,17 +18,15 @@ export async function GET() {
       },
     })
 
-    // Calculate average glucose
     let averageGlucose = 0
     if (readings.length > 0) {
       const sum = readings.reduce((acc, reading) => acc + reading.value, 0)
       averageGlucose = Number.parseFloat((sum / readings.length).toFixed(1))
     }
 
-    // Calculate estimated HbA1c (simplified formula)
+    // Calculating HbA1c (simplified formula)
     const hba1c = Number.parseFloat(((averageGlucose + 2.59) / 1.59).toFixed(1))
 
-    // Count readings from the past week
     const oneWeekAgo = new Date()
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
 
@@ -43,7 +39,6 @@ export async function GET() {
       },
     })
 
-    // Determine risk score based on readings
     let riskScore = "Unknown"
     if (readings.length > 0) {
       const highReadings = readings.filter((r) => r.status === "high" || r.status === "very-high").length

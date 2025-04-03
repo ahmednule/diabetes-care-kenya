@@ -8,25 +8,27 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String
-  email         String    @unique
-  password      String
-  role          Role      @default(USER)
-  diabetesType  String?
-  phone         String?
-  address       String?
-  city          String?
-  diagnosisDate DateTime?
-  medications   String?
-  allergies     String?
-  emergencyContact String?
-  emergencyPhone   String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
-  readings      GlucoseReading[]
-  appointments  Appointment[]
+  id                String    @id @default(cuid())
+  name              String
+  email             String    @unique
+  password          String
+  role              Role      @default(USER)
+  diabetesType      String?
+  phone             String?
+  address           String?
+  city              String?
+  diagnosisDate     DateTime?
+  medications       String?
+  allergies         String?
+  emergencyContact  String?
+  emergencyPhone    String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  readings          GlucoseReading[]
+  appointments      Appointment[]
+  medicationLogs    MedicationLog[]    // New relation
+  prescriptions     Prescription[]      // New relation
 }
 
 enum Role {
@@ -60,3 +62,32 @@ model Appointment {
   updatedAt   DateTime @updatedAt
 }
 
+model Prescription {
+  id              String   @id @default(cuid())
+  medicationName  String
+  dosage          String
+  frequency       String
+  instructions    String?
+  startDate       DateTime
+  endDate         DateTime?
+  isActive        Boolean  @default(true)
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  medicationLogs  MedicationLog[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model MedicationLog {
+  id              String   @id @default(cuid())
+  timestamp       DateTime @default(now())
+  taken           Boolean
+  skippedReason   String?
+  notes           String?
+  userId          String
+  prescriptionId  String
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prescription    Prescription @relation(fields: [prescriptionId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
