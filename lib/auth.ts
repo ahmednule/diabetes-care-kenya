@@ -9,6 +9,7 @@ const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "your-secr
 const EXPIRES_IN = "24h"
 
 export type User = {
+  diagnosisDate: any
   id: string
   name: string
   email: string
@@ -55,6 +56,7 @@ export async function login(email: string, password: string): Promise<{ success:
         name: user.name,
         email: user.email,
         role: user.role,
+        diagnosisDate: user.diagnosisDate,
         diabetesType: user.diabetesType || undefined,
       },
     }
@@ -112,6 +114,7 @@ export async function signup(userData: any): Promise<{ success: boolean; user?: 
         name: newUser.name,
         email: newUser.email,
         role: newUser.role,
+        diagnosisDate: newUser.diagnosisDate,
         diabetesType: newUser.diabetesType || undefined,
       },
     }
