@@ -283,7 +283,7 @@ export default function BillingPage() {
 
           <div className="flex items-center mt-6 p-4 border rounded-md bg-blue-50">
             <Info className="h-5 w-5 text-blue-500 mr-2" />
-            <p className="text-sm">
+            <p className="text-sm text-black">
               Need a custom plan? <a href="/contact" className="font-medium underline">Contact our sales team</a> for enterprise solutions.
             </p>
           </div>
