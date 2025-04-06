@@ -13,12 +13,12 @@ export async function POST(request: Request) {
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
-
+    
     const { message } = await request.json()
     if (!message) {
       return NextResponse.json({ error: "Message is required" }, { status: 400 })
     }
-
+    
     const [recentReadings, medications, appointments] = await Promise.all([
       prisma.glucoseReading.findMany({
         where: { userId: user.id },
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
         },
       }),
       prisma.appointment.findMany({
-        where: { 
+        where: {
           userId: user.id,
           date: { gte: new Date() }
         },
@@ -43,20 +43,46 @@ export async function POST(request: Request) {
         take: 3,
       }),
     ])
-
-    const subscription = await prisma.subscription.findUnique({
+    
+    let subscription = await prisma.subscription.findUnique({
       where: { userId: user.id },
     })
-
-    if (!subscription || subscription.tokensRemaining <= 0) {
-      return NextResponse.json({ 
-        error: "You've reached your monthly limit. Please upgrade your plan for more AI assistant usage." 
+    
+    if (!subscription) {
+      subscription = await prisma.subscription.create({
+        data: {
+          userId: user.id,
+          planId: "free",
+          status: "active",
+          tokensAllotted: 100,
+          tokensRemaining: 100,
+          lastTokenReset: new Date()
+        }
+      });
+    } else {
+      const lastReset = new Date(subscription.lastTokenReset);
+      const today = new Date();
+      
+      if (lastReset.toDateString() !== today.toDateString()) {
+        subscription = await prisma.subscription.update({
+          where: { userId: user.id },
+          data: { 
+            tokensRemaining: 100,
+            lastTokenReset: today
+          }
+        });
+      }
+    }
+    
+    if (subscription.tokensRemaining <= 0) {
+      return NextResponse.json({
+        error: "You've reached your daily limit. Please try again tomorrow."
       }, { status: 403 })
     }
-
+    
     const userContext = {
       diabetesType: user.diabetesType,
-      diagnosisDate: user. diagnosisDate,
+      diagnosisDate: user.diagnosisDate,
       glucoseReadings: recentReadings.map(r => ({
         value: r.value,
         unit: r.unit,
@@ -75,7 +101,7 @@ export async function POST(request: Request) {
         doctor: a.doctorName
       }))
     }
-
+    
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
@@ -93,19 +119,19 @@ export async function POST(request: Request) {
       ],
       max_tokens: 400,
     })
-
+    
     const aiResponse = completion.choices[0].message.content
-
+    
     await prisma.subscription.update({
       where: { userId: user.id },
-      data: { tokensRemaining: subscription.tokensRemaining - 1 }
+      data: { tokensRemaining: subscription.tokensRemaining - 10 }
     })
-
+    
     return NextResponse.json({ response: aiResponse })
   } catch (error) {
     console.error("Error processing AI request:", error)
-    return NextResponse.json({ 
-      error: "Failed to generate response. Please try again." 
+    return NextResponse.json({
+      error: "Failed to generate response. Please try again."
     }, { status: 500 })
   }
 }
