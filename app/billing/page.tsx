@@ -155,7 +155,7 @@ export default function BillingPage() {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-NG', {
       style: 'currency',
-      currency: 'NGN',
+      currency: 'KSH',
       minimumFractionDigits: 0
     }).format(amount)
   }
