@@ -569,8 +569,8 @@ export default function AdminDashboardPage() {
                   <CardContent>
                     <div className="text-2xl font-bold">{stats.totalUsers}</div>
                     <p className="text-xs text-muted-foreground">
-                      <span className={`${stats.monthlyGrowth.users >= 0 ? "text-green-500" : "text-red-500"}`}>
-                        {stats.monthlyGrowth.users >= 0 ? "↑" : "↓"} {Math.abs(stats.monthlyGrowth.users)}%
+                      <span className={`${stats?.monthlyGrowth?.users >= 0 ? "text-green-500" : "text-red-500"}`}>
+                        {stats?.monthlyGrowth?.users >= 0 ? "↑" : "↓"} {Math.abs(stats?.monthlyGrowth?.users)}%
                       </span> from last month
                     </p>
                   </CardContent>
@@ -582,8 +582,8 @@ export default function AdminDashboardPage() {
                   <CardContent>
                     <div className="text-2xl font-bold">{stats.activeUsers}</div>
                     <p className="text-xs text-muted-foreground">
-                      <span className={`${stats.monthlyGrowth.activeUsers >= 0 ? "text-green-500" : "text-red-500"}`}>
-                        {stats.monthlyGrowth.activeUsers >= 0 ? "↑" : "↓"} {Math.abs(stats.monthlyGrowth.activeUsers)}%
+                      <span className={`${stats?.monthlyGrowth?.activeUsers >= 0 ? "text-green-500" : "text-red-500"}`}>
+                        {stats?.monthlyGrowth?.activeUsers >= 0 ? "↑" : "↓"} {Math.abs(stats?.monthlyGrowth?.activeUsers)}%
                       </span> from last month
                     </p>
                   </CardContent>
@@ -595,8 +595,8 @@ export default function AdminDashboardPage() {
                   <CardContent>
                     <div className="text-2xl font-bold">{stats.totalReadings}</div>
                     <p className="text-xs text-muted-foreground">
-                      <span className={`${stats.monthlyGrowth.readings >= 0 ? "text-green-500" : "text-red-500"}`}>
-                        {stats.monthlyGrowth.readings >= 0 ? "↑" : "↓"} {Math.abs(stats.monthlyGrowth.readings)}%
+                      <span className={`${stats?.monthlyGrowth?.readings >= 0 ? "text-green-500" : "text-red-500"}`}>
+                        {stats?.monthlyGrowth?.readings >= 0 ? "↑" : "↓"} {Math.abs(stats?.monthlyGrowth?.readings)}%
                       </span> from last month
                     </p>
                   </CardContent>
@@ -608,8 +608,8 @@ export default function AdminDashboardPage() {
                   <CardContent>
                     <div className="text-2xl font-bold">{stats.totalAppointments}</div>
                     <p className="text-xs text-muted-foreground">
-                      <span className={`${stats.monthlyGrowth.appointments >= 0 ? "text-green-500" : "text-red-500"}`}>
-                        {stats.monthlyGrowth.appointments >= 0 ? "↑" : "↓"} {Math.abs(stats.monthlyGrowth.appointments)}%
+                      <span className={`${stats?.monthlyGrowth?.appointments >= 0 ? "text-green-500" : "text-red-500"}`}>
+                        {stats?.monthlyGrowth?.appointments >= 0 ? "↑" : "↓"} {Math.abs(stats?.monthlyGrowth?.appointments)}%
                       </span> from last month
                     </p>
                   </CardContent>
@@ -756,8 +756,8 @@ export default function AdminDashboardPage() {
                     <div className="flex items-center gap-8">
                       <PieChart className="h-24 w-24 text-primary" />
                       <div className="space-y-2">
-                        {stats.usersByType.length > 0 ? (
-                          stats.usersByType.map((type, index) => {
+                        {stats?.usersByType?.length > 0 ? (
+                          stats?.usersByType.map((type, index) => {
                             const colors = ["bg-primary", "bg-blue-500", "bg-green-500", "bg-orange-500", "bg-purple-500", "bg-muted"];
                             const colorClass = index < colors.length ? colors[index] : colors[colors.length - 1];
                             
