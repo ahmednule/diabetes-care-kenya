@@ -72,6 +72,32 @@ export default function HealthCompanionPage() {
     }
   }
 
+  const formatMessageContent = (content: string) => {
+    let formattedContent = content.replace(
+      /(\d+\.\s+.*?)(?=\n\d+\.|$)/gs,
+      '<li class="ml-4 mb-1">$1</li>'
+    );
+    
+    formattedContent = formattedContent.replace(
+      /\*\*(.*?)\*\*/g, 
+      '<span class="font-bold">$1</span>'
+    );
+    
+    formattedContent = formattedContent.replace(
+      /\n+/g, 
+      '</p><p class="mt-2">'
+    );
+    
+    formattedContent = `<p>${formattedContent}</p>`;
+    
+    formattedContent = formattedContent.replace(
+      /<p>(<li.*?<\/li>)<\/p>/gs,
+      '<ul class="list-disc list-inside my-2">$1</ul>'
+    );
+    
+    return formattedContent;
+  };
+
   return (
     <DashboardLayout>
       <div className="flex min-h-screen flex-col">
@@ -97,7 +123,14 @@ export default function HealthCompanionPage() {
                           message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
                         }`}
                       >
-                        <p className="text-sm">{message.content}</p>
+                        {message.role === "assistant" ? (
+                          <div 
+                            className="text-sm prose prose-sm max-w-none" 
+                            dangerouslySetInnerHTML={{ __html: formatMessageContent(message.content) }}
+                          />
+                        ) : (
+                          <p className="text-sm">{message.content}</p>
+                        )}
                       </div>
                     </div>
                   ))}
