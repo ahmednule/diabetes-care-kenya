@@ -1,5 +1,7 @@
 # DiabetesCare Kenya
 
+![Microsoft Data AI Hack](/public/microsoft.png)
+
 DiabetesCare Kenya is a comprehensive web-based platform designed to empower Kenyans with diabetes to better manage their condition through real-time monitoring, personalized insights, and AI-powered support.
 
 ![DiabetesCare Kenya Dashboard](/public/diabetes-kenya.png)
